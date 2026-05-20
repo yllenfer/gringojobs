@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/gringojobs/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GringoJobs — LATAM talent, US opportunities</title>
+    <script type="module" crossorigin src="/gringojobs/assets/index-CLLBAh5J.js"></script>
+    <link rel="stylesheet" crossorigin href="/gringojobs/assets/index-DYWPAwpK.css">
+  </head>
+  <body>
+    <div id="app">
+      <nav class="nav">
+        <div class="nav-inner">
+          <a class="nav-brand" href="#">
+            <img class="nav-logo" src="/gringojobs/GringoJobs.svg" alt="GringoJobs">
+          </a>
+          <div class="nav-links">
+            <a href="#jobs">Jobs</a>
+            <a href="#how-it-works">How it works</a>
+            <a href="https://gringojobs.com" class="nav-cta" target="_blank" rel="noopener">For Candidates</a>
+          </div>
+        </div>
+      </nav>
+
+      <section class="hero">
+        <div class="hero-bg">
+          <svg class="hero-circle" viewBox="0 0 600 600"><circle cx="300" cy="300" r="280" fill="none" stroke="currentColor" stroke-width="1" opacity="0.08"/><circle cx="300" cy="300" r="220" fill="none" stroke="currentColor" stroke-width="1" opacity="0.06"/><circle cx="300" cy="300" r="160" fill="none" stroke="currentColor" stroke-width="1" opacity="0.04"/></svg>
+        </div>
+        <div class="hero-content">
+          <h1>Connecting the best<br/>LATAM talent with<br/><span class="highlight">US companies</span></h1>
+          <p>Remote-friendly roles at mid-size and large US companies. Find your next opportunity.</p>
+          <div class="hero-search">
+            <div class="hero-search-wrap">
+              <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg>
+              <input type="text" id="searchInput" placeholder="Search job title, skill, or company..." autocomplete="off">
+            </div>
+            <button class="btn btn-primary" id="refreshJobsBtn">
+              Refresh Jobs
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="filters-bar" id="jobs">
+        <div class="filters-inner">
+          <div class="filter-group">
+            <label>Work arrangement</label>
+            <div class="chip-group" id="workTypeFilter">
+              <button class="chip active" data-value="">All</button>
+              <button class="chip" data-value="Remote Solely">Remote</button>
+              <button class="chip" data-value="Hybrid">Hybrid</button>
+              <button class="chip" data-value="On-site">On-site</button>
+            </div>
+          </div>
+          <div class="filter-group">
+            <label>Experience</label>
+            <select id="expFilter">
+              <option value="">All levels</option>
+              <option value="0-2">Entry (0-2 yrs)</option>
+              <option value="2-5">Mid (2-5 yrs)</option>
+              <option value="5-10">Senior (5-10 yrs)</option>
+              <option value="10+">Lead (10+ yrs)</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>Type</label>
+            <select id="employmentFilter">
+              <option value="">All types</option>
+              <option value="FULL_TIME">Full-time</option>
+              <option value="CONTRACTOR">Contract</option>
+              <option value="INTERN">Internship</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>Location</label>
+            <input type="text" id="locationFilter" placeholder="Country (e.g. Mexico, Brazil)">
+          </div>
+          <div class="filter-group checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="salaryFilter">
+              <span>Salary only</span>
+            </label>
+          </div>
+          <button class="btn btn-ghost btn-sm" id="clearFiltersBtn">Clear</button>
+        </div>
+      </section>
+
+      <section class="jobs-section">
+        <div class="jobs-header">
+          <h2 id="resultsCount">Loading jobs...</h2>
+          <div class="jobs-controls">
+            <select id="sortFilter">
+              <option value="newest">Newest</option>
+              <option value="salary_high">Highest salary</option>
+              <option value="salary_low">Lowest salary</option>
+            </select>
+          </div>
+        </div>
+        <div class="jobs-grid" id="jobsGrid">
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <p>Loading jobs from company career sites...</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-light" id="how-it-works">
+        <div class="section-inner">
+          <h2>How it works</h2>
+          <div class="steps">
+            <div class="step">
+              <div class="step-num">01</div>
+              <h3>Browse jobs</h3>
+              <p>Explore curated roles at US companies that actively hire LATAM talent — all remote-friendly, full-time positions.</p>
+            </div>
+            <div class="step">
+              <div class="step-num">02</div>
+              <h3>Apply directly</h3>
+              <p>Every job links directly to the company's career site. No intermediaries, no gatekeeping.</p>
+            </div>
+            <div class="step">
+              <div class="step-num">03</div>
+              <h3>Get hired</h3>
+              <p>We help you navigate visas, compliance, and payments through our partners so you can focus on what matters.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <div class="footer-inner">
+          <div class="footer-brand">
+            <img class="footer-logo" src="/gringojobs/GringoJobs.svg" alt="GringoJobs">
+          </div>
+          <p class="footer-tagline">Made with ❤️ fueled by 🌮 in Mexico City 🇲🇽</p>
+          <p class="footer-copy">Helping LATAM talent find US opportunities &copy; 2026</p>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
