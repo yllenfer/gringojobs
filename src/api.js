@@ -81,10 +81,9 @@ export async function fetchJobsFromApify({ titleSearch, locationSearch, workArra
   if (workArrangement) body.aiWorkArrangementFilter = [workArrangement]
 
   const isDev = import.meta.env.DEV
-  const apiUrl = `https://api.apify.com/v2/acts/${ACTOR_ID}/run-sync-get-dataset-items?token=${API_TOKEN}`
   const url = isDev
     ? `/apify/acts/${ACTOR_ID}/run-sync-get-dataset-items?token=${API_TOKEN}`
-    : `https://corsproxy.io/?${encodeURIComponent(apiUrl)}`
+    : `https://api.apify.com/v2/acts/${ACTOR_ID}/run-sync-get-dataset-items?token=${API_TOKEN}`
 
   const res = await fetch(url, {
     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
