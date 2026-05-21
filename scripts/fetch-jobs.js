@@ -68,6 +68,7 @@ const res = await fetch(
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       limit: 1000,
+      maxChargedResults: 1000,
       timeRange: '7d',
       includeAi: true,
       includeLinkedIn: true,

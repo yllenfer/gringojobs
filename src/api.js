@@ -80,6 +80,7 @@ async function fetchDev() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         limit: 500,
+        maxChargedResults: 500,
         timeRange: '7d',
         includeAi: true,
         includeLinkedIn: true,
