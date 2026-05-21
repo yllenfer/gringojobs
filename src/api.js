@@ -79,7 +79,7 @@ async function fetchDev() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        limit: 100,
+        limit: 500,
         timeRange: '7d',
         includeAi: true,
         includeLinkedIn: true,
