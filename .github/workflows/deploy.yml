@@ -3,6 +3,8 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  schedule:
+    - cron: '0 6 * * *'  # refresh jobs daily at 6am UTC
 
 permissions:
   contents: read
@@ -25,11 +27,12 @@ jobs:
         with:
           node-version: 20
       - run: npm ci
-      - run: npm run build
+      - name: Fetch jobs at build time
+        run: node scripts/fetch-jobs.js
         env:
-          GH_PAGES: true
-          VITE_APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
-          VITE_APIFY_ACTOR_ID: ${{ secrets.APIFY_ACTOR_ID }}
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+          APIFY_ACTOR_ID: ${{ secrets.APIFY_ACTOR_ID }}
+      - run: npm run build
       - uses: actions/configure-pages@v4
       - uses: actions/upload-pages-artifact@v3
         with:

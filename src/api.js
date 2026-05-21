@@ -1,37 +1,30 @@
-const API_TOKEN = import.meta.env.VITE_APIFY_TOKEN
-const ACTOR_ID = import.meta.env.VITE_APIFY_ACTOR_ID
-
 const CACHE_KEY = 'gringojobs_cache'
-const CACHE_EXPIRY = 7 * 24 * 60 * 60 * 1000
+const CACHE_EXPIRY = 6 * 60 * 60 * 1000 // 6 hours
 
 const DEFAULT_LOCATIONS = [
-  "Mexico", "Guatemala", "Belize", "Honduras", "El Salvador", "Nicaragua",
-  "Costa Rica", "Panama", "Cuba", "Dominican Republic", "Haiti",
-  "Argentina", "Bolivia", "Brazil", "Chile", "Colombia", "Ecuador",
-  "Paraguay", "Peru", "Uruguay", "Venezuela"
+  'Mexico', 'Guatemala', 'Belize', 'Honduras', 'El Salvador', 'Nicaragua',
+  'Costa Rica', 'Panama', 'Cuba', 'Dominican Republic', 'Haiti', 'Jamaica',
+  'Trinidad and Tobago', 'Puerto Rico', 'Barbados', 'Bahamas',
+  'Argentina', 'Bolivia', 'Brazil', 'Chile', 'Colombia', 'Ecuador',
+  'Paraguay', 'Peru', 'Uruguay', 'Venezuela', 'Guyana', 'Suriname',
+  'Latin America', 'LATAM', 'South America',
 ]
 
 const DEFAULT_TITLES = [
-  "Lead Engineer",
-  "Software Engineer",
-  "Web Engineer",
-  "Data Scientist",
-  "Senior Product Engineer",
-  "Backend Engineer",
-  "Frontend Engineer",
-  "Full Stack Engineer",
-  "DevOps Engineer",
-  "QA Engineer",
-  "Engineering Manager",
-  "Tech Lead",
-  "Solutions Architect",
-  "Data Engineer",
-  "Machine Learning Engineer",
-  "Product Designer",
-  "UI/UX Designer",
-  "Technical Writer",
-  "Scrum Master",
-  "Product Manager",
+  'Software Engineer', 'Software Developer', 'Backend Engineer', 'Frontend Engineer',
+  'Full Stack Engineer', 'Full Stack Developer', 'Web Engineer', 'Web Developer',
+  'iOS Engineer', 'iOS Developer', 'Android Engineer', 'Android Developer',
+  'Mobile Engineer', 'Mobile Developer', 'Embedded Systems Engineer',
+  'Senior Software Engineer', 'Senior Engineer', 'Lead Engineer', 'Staff Engineer',
+  'Principal Engineer', 'Senior Product Engineer', 'Platform Engineer',
+  'Infrastructure Engineer', 'Cloud Engineer', 'DevOps Engineer',
+  'Site Reliability Engineer', 'SRE', 'Security Engineer', 'Cybersecurity Engineer',
+  'Data Scientist', 'Data Engineer', 'Data Analyst', 'Analytics Engineer',
+  'Machine Learning Engineer', 'ML Engineer', 'AI Engineer', 'BI Developer',
+  'Solutions Architect', 'Cloud Architect', 'Tech Lead', 'Engineering Manager',
+  'QA Engineer', 'Quality Assurance Engineer', 'Test Automation Engineer', 'SDET',
+  'Product Manager', 'Product Designer', 'UI/UX Designer', 'UX Designer',
+  'Technical Writer', 'Developer Advocate', 'Scrum Master', 'Database Administrator',
 ]
 
 export function getCachedJobs() {
@@ -59,46 +52,52 @@ export function clearCache() {
   localStorage.removeItem(CACHE_KEY)
 }
 
-export async function fetchJobsFromApify({ titleSearch, locationSearch, workArrangement, limit = 100, forceRefresh } = {}) {
+export async function fetchJobsFromApify({ forceRefresh } = {}) {
   if (!forceRefresh) {
     const cached = getCachedJobs()
     if (cached) return cached
   }
 
-  const body = {
-    limit: Math.min(limit, 5000),
-    timeRange: '24h',
-    includeAi: true,
-    includeLinkedIn: true,
-    descriptionType: 'text',
-    removeAgency: false,
-    "remote only (legacy)": true,
-    aiEmploymentTypeFilter: ['FULL_TIME'],
-  }
+  const jobs = import.meta.env.DEV ? await fetchDev() : await fetchProd()
+  setCachedJobs(jobs)
+  return jobs
+}
 
-  body.titleSearch = titleSearch ? [titleSearch] : DEFAULT_TITLES
-  body.locationSearch = locationSearch ? [locationSearch] : DEFAULT_LOCATIONS
-  if (workArrangement) body.aiWorkArrangementFilter = [workArrangement]
+async function fetchProd() {
+  const res = await fetch(`${import.meta.env.BASE_URL}jobs.json`)
+  if (!res.ok) throw new Error(`Failed to load jobs (${res.status})`)
+  const data = await res.json()
+  return Array.isArray(data) ? data : data.data || []
+}
 
-  const isDev = import.meta.env.DEV
-  const url = isDev
-    ? `/apify/acts/${ACTOR_ID}/run-sync-get-dataset-items?token=${API_TOKEN}`
-    : `https://api.apify.com/v2/acts/${ACTOR_ID}/run-sync-get-dataset-items?token=${API_TOKEN}`
-
-  const res = await fetch(url, {
-    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
-  })
-
+async function fetchDev() {
+  const TOKEN = import.meta.env.VITE_APIFY_TOKEN
+  const ACTOR_ID = import.meta.env.VITE_APIFY_ACTOR_ID || 'fantastic-jobs~career-site-job-listing-api'
+  const res = await fetch(
+    `/apify/acts/${ACTOR_ID}/run-sync-get-dataset-items?token=${TOKEN}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        limit: 100,
+        timeRange: '7d',
+        includeAi: true,
+        includeLinkedIn: true,
+        descriptionType: 'text',
+        removeAgency: false,
+        'remote only (legacy)': true,
+        aiEmploymentTypeFilter: ['FULL_TIME'],
+        titleSearch: DEFAULT_TITLES,
+        locationSearch: DEFAULT_LOCATIONS,
+      }),
+    }
+  )
   if (!res.ok) {
     const err = await res.json().catch(() => ({}))
     throw new Error(err.error?.message || `API error (${res.status})`)
   }
-
   const data = await res.json()
-  const jobs = Array.isArray(data) ? data : data.data || []
-
-  setCachedJobs(jobs)
-  return jobs
+  return Array.isArray(data) ? data : data.data || []
 }
 
 export function normalizeJob(job) {
@@ -125,7 +124,7 @@ export function normalizeJob(job) {
     workType: wt,
     workTypeClass: wtClass,
     employmentType: (job.ai_employment_type || job.employment_type || []).join(', ') || 'Full Time',
-    experienceLevel: job.ai_experience_level || '',
+    experienceLevel: normalizeExp(job.ai_experience_level),
     description: (job.description_text || '').slice(0, 500),
     datePosted: job.date_posted || new Date().toISOString(),
     countries: job.countries_derived || [],
@@ -133,6 +132,18 @@ export function normalizeJob(job) {
     regions: job.regions_derived || [],
     remote: job.remote_derived || wt.toLowerCase().includes('remote'),
   }
+}
+
+function normalizeExp(raw) {
+  if (!raw) return ''
+  const v = raw.toLowerCase()
+  if (v.includes('intern')) return 'Internship'
+  if (v.includes('entry') || v.includes('junior')) return 'Entry Level'
+  if (v.includes('associate') || v.includes('mid')) return 'Mid Level'
+  if (v.includes('senior') || v.includes('sr')) return 'Senior Level'
+  if (v.includes('lead') || v.includes('principal') || v.includes('staff')) return 'Lead'
+  if (v.includes('director') || v.includes('manager') || v.includes('executive') || v.includes('vp')) return 'Manager+'
+  return raw
 }
 
 function fmtSalary(v, c) {
