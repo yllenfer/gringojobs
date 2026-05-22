@@ -12,9 +12,7 @@ const $searchInput = $('#searchInput')
 const $refreshBtn = $('#refreshJobsBtn')
 const $workTypeChips = $$('#workTypeFilter .chip')
 const $expFilter = $('#expFilter')
-const $employmentFilter = $('#employmentFilter')
 const $locationFilter = $('#locationFilter')
-const $salaryFilter = $('#salaryFilter')
 const $sortFilter = $('#sortFilter')
 const $clearFilters = $('#clearFiltersBtn')
 
@@ -38,9 +36,7 @@ function bindEvents() {
     applyFilters()
   }))
   $expFilter.addEventListener('change', applyFilters)
-  $employmentFilter.addEventListener('change', applyFilters)
   $locationFilter.addEventListener('input', debounce(applyFilters, 300))
-  $salaryFilter.addEventListener('change', applyFilters)
   $sortFilter.addEventListener('change', applyFilters)
   $clearFilters.addEventListener('click', clearFilters)
 
@@ -101,18 +97,14 @@ function applyFilters() {
   const query = $searchInput.value.toLowerCase().trim()
   const workType = document.querySelector('#workTypeFilter .chip.active')?.dataset.value || ''
   const exp = $expFilter.value
-  const empType = $employmentFilter.value
   const locQ = $locationFilter.value.toLowerCase().trim()
-  const hasSalary = $salaryFilter.checked
   const sort = $sortFilter.value
 
   let filtered = state.jobs.filter(j => {
     if (query && !matches(j, query)) return false
     if (workType && j.workType !== workType) return false
     if (exp && j.experienceLevel !== exp) return false
-    if (empType && !j.employmentType.toUpperCase().includes(empType)) return false
     if (locQ && !locMatch(j, locQ)) return false
-    if (hasSalary && !j.salaryMin) return false
     return true
   })
 
@@ -136,9 +128,7 @@ function clearFilters() {
   $searchInput.value = ''
   $workTypeChips.forEach(c => c.classList.toggle('active', c.dataset.value === ''))
   $expFilter.value = ''
-  $employmentFilter.value = ''
   $locationFilter.value = ''
-  $salaryFilter.checked = false
   $sortFilter.value = 'newest'
   applyFilters()
 }

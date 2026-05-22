@@ -1,32 +1,6 @@
 const CACHE_KEY = 'gringojobs_cache'
 const CACHE_EXPIRY = 6 * 60 * 60 * 1000 // 6 hours
 
-const DEFAULT_LOCATIONS = [
-  'Mexico', 'Guatemala', 'Belize', 'Honduras', 'El Salvador', 'Nicaragua',
-  'Costa Rica', 'Panama', 'Cuba', 'Dominican Republic', 'Haiti', 'Jamaica',
-  'Trinidad and Tobago', 'Puerto Rico', 'Barbados', 'Bahamas',
-  'Argentina', 'Bolivia', 'Brazil', 'Chile', 'Colombia', 'Ecuador',
-  'Paraguay', 'Peru', 'Uruguay', 'Venezuela', 'Guyana', 'Suriname',
-  'Latin America', 'LATAM', 'South America',
-]
-
-const DEFAULT_TITLES = [
-  'Software Engineer', 'Software Developer', 'Backend Engineer', 'Frontend Engineer',
-  'Full Stack Engineer', 'Full Stack Developer', 'Web Engineer', 'Web Developer',
-  'iOS Engineer', 'iOS Developer', 'Android Engineer', 'Android Developer',
-  'Mobile Engineer', 'Mobile Developer', 'Embedded Systems Engineer',
-  'Senior Software Engineer', 'Senior Engineer', 'Lead Engineer', 'Staff Engineer',
-  'Principal Engineer', 'Senior Product Engineer', 'Platform Engineer',
-  'Infrastructure Engineer', 'Cloud Engineer', 'DevOps Engineer',
-  'Site Reliability Engineer', 'SRE', 'Security Engineer', 'Cybersecurity Engineer',
-  'Data Scientist', 'Data Engineer', 'Data Analyst', 'Analytics Engineer',
-  'Machine Learning Engineer', 'ML Engineer', 'AI Engineer', 'BI Developer',
-  'Solutions Architect', 'Cloud Architect', 'Tech Lead', 'Engineering Manager',
-  'QA Engineer', 'Quality Assurance Engineer', 'Test Automation Engineer', 'SDET',
-  'Product Manager', 'Product Designer', 'UI/UX Designer', 'UX Designer',
-  'Technical Writer', 'Developer Advocate', 'Scrum Master', 'Database Administrator',
-]
-
 export function getCachedJobs() {
   try {
     const raw = localStorage.getItem(CACHE_KEY)
@@ -79,23 +53,18 @@ async function fetchDev() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        limit: 500,
-        maxChargedResults: 500,
         timeRange: '7d',
+        limit: 500,
         includeAi: true,
-        includeLinkedIn: true,
         descriptionType: 'text',
-        removeAgency: false,
-        'remote only (legacy)': true,
-        aiEmploymentTypeFilter: ['FULL_TIME'],
-        titleSearch: DEFAULT_TITLES,
-        locationSearch: DEFAULT_LOCATIONS,
+        populateAiRemoteLocation: false,
+        populateAiRemoteLocationDerived: false,
       }),
     }
   )
   if (!res.ok) {
-    const err = await res.json().catch(() => ({}))
-    throw new Error(err.error?.message || `API error (${res.status})`)
+    console.warn('Apify API failed, falling back to jobs.json')
+    return fetchProd()
   }
   const data = await res.json()
   return Array.isArray(data) ? data : data.data || []

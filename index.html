@@ -43,15 +43,6 @@
       <section class="filters-bar" id="jobs">
         <div class="filters-inner">
           <div class="filter-group">
-            <label>Work arrangement</label>
-            <div class="chip-group" id="workTypeFilter">
-              <button class="chip active" data-value="">All</button>
-              <button class="chip" data-value="Remote Solely">Remote</button>
-              <button class="chip" data-value="Hybrid">Hybrid</button>
-              <button class="chip" data-value="On-site">On-site</button>
-            </div>
-          </div>
-          <div class="filter-group">
             <label>Experience</label>
             <select id="expFilter">
               <option value="">All levels</option>
@@ -64,24 +55,15 @@
             </select>
           </div>
           <div class="filter-group">
-            <label>Type</label>
-            <select id="employmentFilter">
-              <option value="">All types</option>
-              <option value="FULL_TIME">Full-time</option>
-              <option value="CONTRACTOR">Contract</option>
-              <option value="INTERN">Internship</option>
-            </select>
-          </div>
-          <div class="filter-group">
             <label>Location</label>
             <input type="text" id="locationFilter" placeholder="Country (e.g. Mexico, Brazil)">
           </div>
-          <div class="filter-group checkbox-group">
+          <!-- <div class="filter-group checkbox-group">
             <label class="checkbox-label">
               <input type="checkbox" id="salaryFilter">
               <span>Salary only</span>
             </label>
-          </div>
+          </div> -->
           <button class="btn btn-ghost btn-sm" id="clearFiltersBtn">Clear</button>
         </div>
       </section>

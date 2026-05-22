@@ -8,10 +8,10 @@
   --text-muted: #94a3b8;
   --text-light: #cbd5e1;
   --border: #e2e8f0;
-  --accent: #2856ea;
-  --accent-hover: #1d44c0;
-  --accent-light: rgba(40, 86, 234, 0.08);
-  --accent-glow: rgba(40, 86, 234, 0.25);
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-light: rgba(37, 99, 235, 0.08);
+  --accent-glow: rgba(37, 99, 235, 0.25);
   --green: #16a34a;
   --amber: #d97706;
   --radius: 12px;
@@ -31,7 +31,7 @@
 body { margin: 0; }
 
 .nav {
-  background: var(--bg-dark);
+  background: var(--accent);
   padding: 0 24px;
   position: sticky;
   top: 0;
@@ -67,16 +67,16 @@ body { margin: 0; }
 }
 .nav-links a:hover { color: #fff; }
 .nav-cta {
-  background: var(--accent);
-  color: #fff !important;
+  background: #fff;
+  color: var(--accent) !important;
   padding: 8px 20px;
   border-radius: var(--radius-xs);
   font-weight: 600;
 }
-.nav-cta:hover { background: var(--accent-hover) !important; }
+.nav-cta:hover { background: rgba(255,255,255,0.88) !important; }
 
 .hero {
-  background: var(--bg-dark);
+  background: var(--accent);
   color: #fff;
   padding: 80px 24px;
   position: relative;
@@ -497,7 +497,7 @@ body { margin: 0; }
 }
 
 .footer {
-  background: var(--bg-dark);
+  background: var(--accent-hover);
   color: var(--text-light);
   padding: 40px 24px;
   text-align: center;
