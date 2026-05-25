@@ -20,7 +20,46 @@ init()
 
 function init() {
   bindEvents()
+  bindNewsletter()
   loadJobs()
+}
+
+function bindNewsletter() {
+  const form = document.getElementById('newsletterForm')
+  const btn = document.getElementById('newsletterBtn')
+  const feedback = document.getElementById('newsletterFeedback')
+  if (!form) return
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault()
+    const email = document.getElementById('newsletterEmail').value.trim()
+    btn.disabled = true
+    btn.textContent = 'Subscribing...'
+    feedback.hidden = true
+    feedback.className = 'newsletter-feedback'
+
+    try {
+      const res = await fetch('https://gringojobs.substack.com/api/v1/free', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+      if (res.ok || res.status === 200) {
+        feedback.textContent = '✓ Check your inbox (and spam) for a confirmation email from Substack.'
+        feedback.classList.add('success')
+        form.reset()
+      } else {
+        throw new Error('Subscribe failed')
+      }
+    } catch {
+      feedback.textContent = 'Could not subscribe — please try at gringojobs.substack.com'
+      feedback.classList.add('error')
+    } finally {
+      feedback.hidden = false
+      btn.disabled = false
+      btn.textContent = 'Subscribe'
+    }
+  })
 }
 
 function bindEvents() {
@@ -175,7 +214,6 @@ function renderCard(j) {
       <div class="job-card-meta">
         <span class="meta-tag ${j.workTypeClass}">${escHtml(j.workType)}</span>
         <span class="meta-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${escHtml(j.location) || 'Remote'}</span>
-        ${j.employmentType ? `<span class="meta-tag">${escHtml(j.employmentType)}</span>` : ''}
         ${j.salary ? `<span class="meta-tag salary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>${escHtml(j.salary)}</span>` : ''}
       </div>
       <div class="job-card-desc">${escHtml(j.description)}</div>

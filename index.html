@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="./public/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GringoJobs — LATAM talent, US opportunities</title>
   </head>
@@ -14,9 +14,7 @@
             <img class="nav-logo" src="/GringoJobs.svg" alt="GringoJobs">
           </a>
           <div class="nav-links">
-            <a href="#jobs">Jobs</a>
-            <a href="#how-it-works">How it works</a>
-            <a href="https://gringojobs.com" class="nav-cta" target="_blank" rel="noopener">For Candidates</a>
+            <a href="https://gringojobs.com/#clients" class="nav-cta" target="_blank" rel="noopener">For Headhunting Services</a>
           </div>
         </div>
       </nav>
@@ -28,25 +26,39 @@
         <div class="hero-content">
           <h1>Connecting the best<br/>LATAM talent with<br/><span class="highlight">US companies</span></h1>
           <p>Remote-friendly roles at mid-size and large US companies. Find your next opportunity.</p>
-          <div class="hero-search">
-            <div class="hero-search-wrap">
-              <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg>
-              <input type="text" id="searchInput" placeholder="Search job title, skill, or company..." autocomplete="off">
-            </div>
-            <button class="btn btn-primary" id="refreshJobsBtn">
-              Refresh Jobs
-            </button>
+          <div class="newsletter">
+            <p class="newsletter-label">Get new jobs in your inbox every week</p>
+            <form class="newsletter-form" id="newsletterForm">
+              <input type="email" id="newsletterEmail" placeholder="your@email.com" autocomplete="email" required>
+              <button type="submit" class="btn btn-primary" id="newsletterBtn">Subscribe</button>
+            </form>
+            <p class="newsletter-feedback" id="newsletterFeedback" hidden></p>
           </div>
         </div>
       </section>
 
       <section class="filters-bar" id="jobs">
         <div class="filters-inner">
+          <div class="filter-group filter-group-search">
+            <label>Search</label>
+            <div class="filter-search-wrap">
+              <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg>
+              <input type="text" id="searchInput" placeholder="Job title, skill, or company..." autocomplete="off">
+            </div>
+          </div>
+          <div class="filter-group">
+            <label>Work arrangement</label>
+            <div class="chip-group" id="workTypeFilter">
+              <button class="chip active" data-value="">All</button>
+              <button class="chip" data-value="Remote Solely">Remote</button>
+              <button class="chip" data-value="Hybrid">Hybrid</button>
+              <button class="chip" data-value="On-site">On-site</button>
+            </div>
+          </div>
           <div class="filter-group">
             <label>Experience</label>
             <select id="expFilter">
               <option value="">All levels</option>
-              <option value="Internship">Internship</option>
               <option value="Entry Level">Entry Level</option>
               <option value="Mid Level">Mid Level</option>
               <option value="Senior Level">Senior Level</option>
@@ -77,6 +89,7 @@
               <option value="salary_high">Highest salary</option>
               <option value="salary_low">Lowest salary</option>
             </select>
+            <button class="btn btn-ghost btn-sm" id="refreshJobsBtn">Refresh Jobs</button>
           </div>
         </div>
         <div class="jobs-grid" id="jobsGrid">
@@ -91,20 +104,36 @@
         <div class="section-inner">
           <h2>How it works</h2>
           <div class="steps">
-            <div class="step">
-              <div class="step-num">01</div>
-              <h3>Browse jobs</h3>
-              <p>Explore curated roles at US companies that actively hire LATAM talent — all remote-friendly, full-time positions.</p>
+            <div class="step-card">
+              <div class="step-icon">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="24" cy="14" r="7" stroke="currentColor" stroke-width="2.5"/>
+                  <path d="M8 40c0-8.837 7.163-16 16-16s16 7.163 16 16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                  <path d="M32 22l3 3 7-7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <p>Browse curated roles at US companies actively hiring LATAM talent.</p>
             </div>
-            <div class="step">
-              <div class="step-num">02</div>
-              <h3>Apply directly</h3>
-              <p>Every job links directly to the company's career site. No intermediaries, no gatekeeping.</p>
+            <div class="step-card">
+              <div class="step-icon">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="6" y="14" width="36" height="24" rx="4" stroke="currentColor" stroke-width="2.5"/>
+                  <path d="M6 22h36" stroke="currentColor" stroke-width="2.5"/>
+                  <path d="M14 30h6M14 34h4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                  <circle cx="36" cy="30" r="1.5" fill="currentColor"/>
+                </svg>
+              </div>
+              <p>Apply directly on the company's career site. No middlemen, no gatekeeping.</p>
             </div>
-            <div class="step">
-              <div class="step-num">03</div>
-              <h3>Get hired</h3>
-              <p>We help you navigate visas, compliance, and payments through our partners so you can focus on what matters.</p>
+            <div class="step-card">
+              <div class="step-icon">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="8" y="10" width="32" height="32" rx="4" stroke="currentColor" stroke-width="2.5"/>
+                  <path d="M16 24l6 6 10-10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M16 14h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <p>Get hired and let us handle visas, compliance, and payments.</p>
             </div>
           </div>
         </div>

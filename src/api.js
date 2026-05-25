@@ -1,3 +1,5 @@
+import { filterLocalJobs } from './filter.js'
+
 const CACHE_KEY = 'gringojobs_cache'
 const CACHE_EXPIRY = 6 * 60 * 60 * 1000 // 6 hours
 
@@ -32,7 +34,8 @@ export async function fetchJobsFromApify({ forceRefresh } = {}) {
     if (cached) return cached
   }
 
-  const jobs = import.meta.env.DEV ? await fetchDev() : await fetchProd()
+  const raw = import.meta.env.DEV ? await fetchDev() : await fetchProd()
+  const jobs = filterLocalJobs(raw)
   setCachedJobs(jobs)
   return jobs
 }
@@ -107,7 +110,6 @@ export function normalizeJob(job) {
 function normalizeExp(raw) {
   if (!raw) return ''
   const v = raw.toLowerCase()
-  if (v.includes('intern')) return 'Internship'
   if (v.includes('entry') || v.includes('junior')) return 'Entry Level'
   if (v.includes('associate') || v.includes('mid')) return 'Mid Level'
   if (v.includes('senior') || v.includes('sr')) return 'Senior Level'
